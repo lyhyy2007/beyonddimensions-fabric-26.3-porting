@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "beyonddimensions",
+  "version": "${version}",
+  "name": "Beyond Dimensions",
+  "description": "维度网络存储系统：大容量物品/流体/能量存储与自动化交互。原作 Frostbite-time，本产物为 Fabric 26.3 社区移植版。",
+  "authors": [
+    "Frostbite-time"
+  ],
+  "contributors": [
+    "Dehowy (Fabric 26.1 port)"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Frostbite-time/BeyondDimensions",
+    "sources": "https://github.com/Frostbite-time/BeyondDimensions",
+    "issues": "https://github.com/Frostbite-time/BeyondDimensions/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "accessWidener": "beyonddimensions.accesswidener",
+  "entrypoints": {
+    "main": [
+      "com.wintercogs.beyonddimensions.fabric.BeyondDimensionsFabric"
+    ],
+    "client": [
+      "com.wintercogs.beyonddimensions.fabric.BeyondDimensionsFabricClient"
+    ]
+  },
+  "mixins": [
+    "beyonddimensions.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

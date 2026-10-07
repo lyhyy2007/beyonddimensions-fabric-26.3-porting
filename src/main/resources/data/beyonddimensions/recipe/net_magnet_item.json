@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "beyonddimensions:space_time_bar",
+    "B": "minecraft:iron_ingot",
+    "C": "beyonddimensions:shattered_space_time_crystallization"
+  },
+  "pattern": [
+    " AB",
+    "A C",
+    " AB"
+  ],
+  "result": {
+    "id": "beyonddimensions:net_magnet_item"
+  }
+}

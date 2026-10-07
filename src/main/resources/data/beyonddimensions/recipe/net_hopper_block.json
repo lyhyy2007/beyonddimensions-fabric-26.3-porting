@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:bucket",
+    "B": "beyonddimensions:dimensional_connect_block",
+    "C": "minecraft:hopper",
+    "D": "minecraft:cobblestone"
+  },
+  "pattern": [
+    "   ",
+    "ABC",
+    "DDD"
+  ],
+  "result": {
+    "id": "beyonddimensions:net_hopper_block"
+  }
+}

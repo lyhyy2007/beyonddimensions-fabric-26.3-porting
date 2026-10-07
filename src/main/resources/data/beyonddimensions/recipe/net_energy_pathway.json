@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "beyonddimensions:space_time_bar",
+    "B": "beyonddimensions:space_time_stable_frame",
+    "C": "minecraft:copper_ingot",
+    "D": "minecraft:ender_eye"
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "ABA"
+  ],
+  "result": {
+    "id": "beyonddimensions:net_energy_pathway"
+  }
+}

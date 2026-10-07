@@ -1,0 +1,63 @@
+Beyond Dimensions — Fabric 26.3 port
+Copyright notices and attribution
+=================================
+
+Original work
+-------------
+  Beyond Dimensions (超越维度)
+    Author   : Frostbite-time
+    Homepage : https://github.com/Frostbite-time/BeyondDimensions
+    License  : MIT
+    Copyright: Copyright (c) 2025 Frostbite-time
+
+  THIS PROJECT IS A COMMUNITY PORT AND IS NOT AN OFFICIAL RELEASE BY THE ORIGINAL AUTHOR.
+  All original design, artwork, assets and the vast majority of the source code are the
+  work of Frostbite-time. The porting maintainers claim no authorship over the original
+  work; their contribution is limited to loader/version adaptation as described in
+  docs/移植报告-26.3.md.
+
+  Upstream metadata declares: mod_license=MIT, mod_authors=Frostbite,
+  mod_id=beyonddimensions, mod_group_id=com.wintercogs.beyonddimensions.
+
+
+Port lineage
+------------
+  * Original mod (NeoForge)
+      Frostbite-time — https://github.com/Frostbite-time/BeyondDimensions
+
+  * Fabric branch, 26.1 baseline (the direct source of this port)
+      Dehowy — https://github.com/Dehowy/BeyondDimensions-Fabric
+
+  * Fabric 26.3 port (this repository)
+      Porting maintainers — see the repository's commit history.
+
+
+Third-party components
+----------------------
+  * TinyPinyin 2.0.3
+      License : Apache License 2.0
+      Source  : https://github.com/promeG/TinyPinyin
+      Usage   : bundled into the built jar via jar-in-jar packaging
+      Text    : licenses/Apache-2.0.txt
+
+  See THIRD_PARTY_NOTICES.md for the full list.
+
+
+MIT License obligations
+-----------------------
+  The MIT License requires that the copyright notice and permission notice above be
+  included in all copies or substantial portions of the Software.
+
+  Accordingly:
+    * the verbatim upstream notice is reproduced in LICENSE at the repository root;
+    * LICENSE, this NOTICE, THIRD_PARTY_NOTICES.md and licenses/ are embedded into every
+      built jar under META-INF/, so that the notice travels with the distributed artifact.
+
+
+Redistribution
+--------------
+  You may use, copy, modify, merge, publish, distribute, sublicense and/or sell copies of
+  this project under the terms of the MIT License, provided the original copyright notice
+  and permission notice are retained. When redistributing, please keep the original
+  author's name and repository link visible, and make clear that your build is a port or
+  fork rather than the upstream official release.

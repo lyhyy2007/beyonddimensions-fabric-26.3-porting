@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "B": "minecraft:iron_ingot",
+    "C": "beyonddimensions:space_time_stable_frame"
+  },
+  "pattern": [
+    " A ",
+    "BCB",
+    " B "
+  ],
+  "result": {
+    "id": "beyonddimensions:net_member_inviter"
+  }
+}

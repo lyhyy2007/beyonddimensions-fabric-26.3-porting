@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:sticky_piston",
+    "C": "beyonddimensions:dimensional_connect_block"
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "id": "beyonddimensions:net_pump_block"
+  }
+}

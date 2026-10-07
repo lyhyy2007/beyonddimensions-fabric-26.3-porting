@@ -1,0 +1,12 @@
+forceload add 0 0
+setblock 12 120 0 beyonddimensions:net_control
+setblock 12 120 2 beyonddimensions:net_interface
+setblock 12 120 4 beyonddimensions:net_furnace_block
+setblock 12 120 6 beyonddimensions:xp_fluid
+setblock 12 120 8 beyonddimensions:net_energy_pathway
+setblock 12 120 10 beyonddimensions:net_hopper_block
+data get block 12 120 2
+data get block 12 120 4
+summon minecraft:item 12 130 0 {Item:{id:"beyonddimensions:net_creater",count:1}}
+summon minecraft:item 12 130 2 {Item:{id:"beyonddimensions:xp_fluid_bucket",count:1}}
+bdtools network deleteNet 0

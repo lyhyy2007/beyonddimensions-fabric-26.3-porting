@@ -1,0 +1,322 @@
+package com.wintercogs.beyonddimensions.client.gui;
+
+import com.wintercogs.beyonddimensions.client.util.BDKeyHelper;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import com.wintercogs.beyonddimensions.BeyondDimensions;
+import com.wintercogs.beyonddimensions.client.gui.widget.shared.LeftTabButton;
+import com.wintercogs.beyonddimensions.client.gui.widget.shared.RightTabButton;
+import com.wintercogs.beyonddimensions.client.init.BDShortKeys;
+import com.wintercogs.beyonddimensions.common.init.BDDataComponents;
+import com.wintercogs.beyonddimensions.common.machine.*;
+import com.wintercogs.beyonddimensions.common.menu.NetMagnetMenu;
+import com.wintercogs.beyonddimensions.util.GuiRenderHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+
+public class NetMagnetGUI extends BDBaseGUI<NetMagnetMenu>
+{
+    private RightTabButton filterModeButton;
+    private RightTabButton controlModeButton;
+    private RightTabButton hopperItemModeButton;
+    private RightTabButton hopperXpModeButton;
+    private RightTabButton hopperNBTModeButton;
+    private RightTabButton hopperFluidModeButton;
+    private LeftTabButton hopperRangeModeButton;
+
+    public NetMagnetGUI(NetMagnetMenu menu, Inventory playerInventory, Component title)
+    {
+        super(menu, playerInventory, title);
+    }
+
+    @Override
+    protected void init()
+    {
+        super.init();
+
+        this.imageWidth = 176;
+        this.imageHeight = rebuildImageHeight();
+        rebuildLabelHeight();
+        this.leftPos = (this.width - imageWidth) / 2;
+        this.topPos = (this.height - imageHeight) / 2;
+
+        filterModeButton = new RightTabButton(leftPos + 176, topPos + 6, 23, 26,
+                leftPos + 176 + 3, topPos + 6 + 4, 16, 16, button -> {
+            filterModeButton.toggleState();
+            menu.menuStack.set(BDDataComponents.FILTER_MODE.get(), (FilterMode) filterModeButton.currentState);
+            menu.writeAndSendQuickData();
+        })
+        {
+            @Override
+            protected void initButton()
+            {
+                iconMap.put(FilterMode.IGNORE, BeyondDimensions.makeId("widget/ignore_filter"));
+                iconMap.put(FilterMode.WHITE, BeyondDimensions.makeId("widget/white_filter"));
+                iconMap.put(FilterMode.BLACK, BeyondDimensions.makeId("widget/black_filter"));
+
+                tooltipMap.put(FilterMode.IGNORE, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.filter_mode_ignore")));
+                tooltipMap.put(FilterMode.WHITE, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.filter_mode_white")));
+                tooltipMap.put(FilterMode.BLACK, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.filter_mode_black")));
+
+                for (Enum<?> state : iconMap.keySet())
+                {
+                    this.states.add(state);
+                }
+
+                setState(menu.menuStack.get(BDDataComponents.FILTER_MODE.get()));
+            }
+        };
+        addRenderableWidget(filterModeButton);
+
+        controlModeButton = new RightTabButton(leftPos + 176, topPos + 36, 23, 26,
+                leftPos + 176 + 3, topPos + 36 + 4, 16, 16, button -> {
+            controlModeButton.toggleState();
+            menu.menuStack.set(BDDataComponents.CONTROL_MODE.get(), (RedStoneControlMode) controlModeButton.currentState);
+            menu.writeAndSendQuickData();
+        })
+        {
+            @Override
+            protected void initButton()
+            {
+                iconMap.put(RedStoneControlMode.IGNORE, BeyondDimensions.makeId("widget/control_mode_ignore"));
+                iconMap.put(RedStoneControlMode.NOT_WORKING, BeyondDimensions.makeId("widget/control_mode_not_working"));
+
+                tooltipMap.put(RedStoneControlMode.IGNORE, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.control_mode_ignore")));
+                tooltipMap.put(RedStoneControlMode.NOT_WORKING, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.control_mode_not_working")));
+
+
+                for (Enum<?> state : iconMap.keySet())
+                {
+                    this.states.add(state);
+                }
+
+                setState(menu.menuStack.get(BDDataComponents.CONTROL_MODE.get()));
+            }
+        };
+        addRenderableWidget(controlModeButton);
+
+        hopperItemModeButton = new RightTabButton(leftPos + 176, topPos + 66, 23, 26,
+                leftPos + 176 + 3, topPos + 66 + 4, 16, 16, button -> {
+            hopperItemModeButton.toggleState();
+            menu.menuStack.set(BDDataComponents.HOPPER_ITEM_MODE.get(), (HopperItemMode) hopperItemModeButton.currentState);
+            menu.writeAndSendQuickData();
+        })
+        {
+            @Override
+            protected void initButton()
+            {
+                iconMap.put(HopperItemMode.DENY, BeyondDimensions.makeId("widget/hopper_item_mode_deny"));
+                iconMap.put(HopperItemMode.ALLOW, BeyondDimensions.makeId("widget/hopper_item_mode_allow"));
+
+
+                tooltipMap.put(HopperItemMode.DENY, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.hopper_item_mode_deny")));
+                tooltipMap.put(HopperItemMode.ALLOW, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.hopper_item_mode_allow")));
+
+
+                for (Enum<?> state : iconMap.keySet())
+                {
+                    this.states.add(state);
+                }
+
+                setState(menu.menuStack.get(BDDataComponents.HOPPER_ITEM_MODE.get()));
+            }
+        };
+        addRenderableWidget(hopperItemModeButton);
+
+        hopperXpModeButton = new RightTabButton(leftPos + 176, topPos + 96, 23, 26,
+                leftPos + 176 + 3, topPos + 96 + 4, 16, 16, button -> {
+            hopperXpModeButton.toggleState();
+            menu.menuStack.set(BDDataComponents.HOPPER_XP_MODE.get(), (HopperXpMode) hopperXpModeButton.currentState);
+            menu.writeAndSendQuickData();
+        })
+        {
+            @Override
+            protected void initButton()
+            {
+                iconMap.put(HopperXpMode.DENY, BeyondDimensions.makeId("widget/hopper_xp_mode_deny"));
+                iconMap.put(HopperXpMode.ALLOW, BeyondDimensions.makeId("widget/hopper_xp_mode_allow"));
+
+
+                tooltipMap.put(HopperXpMode.DENY, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.hopper_xp_mode_deny")));
+                tooltipMap.put(HopperXpMode.ALLOW, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.hopper_xp_mode_allow")));
+
+
+                for (Enum<?> state : iconMap.keySet())
+                {
+                    this.states.add(state);
+                }
+
+                setState(menu.menuStack.get(BDDataComponents.HOPPER_XP_MODE.get()));
+            }
+        };
+        addRenderableWidget(hopperXpModeButton);
+
+        hopperNBTModeButton = new RightTabButton(leftPos + 176, topPos + 126, 23, 26,
+                leftPos + 176 + 3, topPos + 126 + 4, 16, 16, button -> {
+            hopperNBTModeButton.toggleState();
+            menu.menuStack.set(BDDataComponents.HOPPER_NBT_MODE.get(), (HopperNBTMode) hopperNBTModeButton.currentState);
+            menu.writeAndSendQuickData();
+        })
+        {
+            @Override
+            protected void initButton()
+            {
+                iconMap.put(HopperNBTMode.DENY, BeyondDimensions.makeId("widget/hopper_nbt_mode_deny"));
+                iconMap.put(HopperNBTMode.ALLOW, BeyondDimensions.makeId("widget/hopper_nbt_mode_allow"));
+
+
+                tooltipMap.put(HopperNBTMode.DENY, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.hopper_nbt_mode_deny")));
+                tooltipMap.put(HopperNBTMode.ALLOW, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.hopper_nbt_mode_allow")));
+
+
+                for (Enum<?> state : iconMap.keySet())
+                {
+                    this.states.add(state);
+                }
+
+                setState(menu.menuStack.get(BDDataComponents.HOPPER_NBT_MODE.get()));
+            }
+        };
+        addRenderableWidget(hopperNBTModeButton);
+
+        hopperFluidModeButton = new RightTabButton(leftPos + 176, topPos + 156, 23, 26,
+                leftPos + 176 + 3, topPos + 156 + 4, 16, 16, button -> {
+            hopperFluidModeButton.toggleState();
+            menu.menuStack.set(BDDataComponents.HOPPER_FLUID_MODE.get(), (HopperFluidMode) hopperFluidModeButton.currentState);
+            menu.writeAndSendQuickData();
+        })
+        {
+            @Override
+            protected void initButton()
+            {
+                iconMap.put(HopperFluidMode.DENY, BeyondDimensions.makeId("widget/hopper_fluid_mode_deny"));
+                iconMap.put(HopperFluidMode.ALLOW, BeyondDimensions.makeId("widget/hopper_fluid_mode_allow"));
+
+                tooltipMap.put(HopperFluidMode.DENY, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.hopper_fluid_mode_deny")));
+                tooltipMap.put(HopperFluidMode.ALLOW, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.hopper_fluid_mode_allow")));
+
+
+                for (Enum<?> state : iconMap.keySet())
+                {
+                    this.states.add(state);
+                }
+
+                setState(menu.menuStack.get(BDDataComponents.HOPPER_FLUID_MODE.get()));
+            }
+        };
+        addRenderableWidget(hopperFluidModeButton);
+
+        hopperRangeModeButton = new LeftTabButton(leftPos - 23, topPos + 156, 23, 26,
+                leftPos - 18, topPos + 156 + 4, 16, 16, button -> {
+            hopperRangeModeButton.toggleState();
+            menu.menuStack.set(BDDataComponents.HOPPER_RANGE_MODE.get(), (HopperRangeMode) hopperRangeModeButton.currentState);
+            menu.writeAndSendQuickData();
+        })
+        {
+            @Override
+            protected void initButton()
+            {
+                iconMap.put(HopperRangeMode.RADIUS_LOWEST, BeyondDimensions.makeId("widget/hopper_range_mode_lowest"));
+                iconMap.put(HopperRangeMode.RADIUS_LOW, BeyondDimensions.makeId("widget/hopper_range_mode_low"));
+                iconMap.put(HopperRangeMode.RADIUS_MID, BeyondDimensions.makeId("widget/hopper_range_mode_mid"));
+                iconMap.put(HopperRangeMode.RADIUS_HIGH, BeyondDimensions.makeId("widget/hopper_range_mode_high"));
+                iconMap.put(HopperRangeMode.RADIUS_HIGHEST, BeyondDimensions.makeId("widget/hopper_range_mode_highest"));
+                iconMap.put(HopperRangeMode.CHUNK_MODE, BeyondDimensions.makeId("widget/hopper_range_mode_chunk"));
+
+                tooltipMap.put(HopperRangeMode.RADIUS_LOWEST, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.magnet_range_mode_lowest")));
+                tooltipMap.put(HopperRangeMode.RADIUS_LOW, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.magnet_range_mode_low")));
+                tooltipMap.put(HopperRangeMode.RADIUS_MID, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.magnet_range_mode_mid")));
+                tooltipMap.put(HopperRangeMode.RADIUS_HIGH, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.magnet_range_mode_high")));
+                tooltipMap.put(HopperRangeMode.RADIUS_HIGHEST, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.magnet_range_mode_highest")));
+                tooltipMap.put(HopperRangeMode.CHUNK_MODE, Tooltip.create(Component.translatable("tooltip.button.beyonddimensions.magnet_range_mode_chunk")));
+
+
+                for (Enum<?> state : iconMap.keySet())
+                {
+                    this.states.add(state);
+                }
+
+                setState(menu.menuStack.get(BDDataComponents.HOPPER_RANGE_MODE.get()));
+            }
+        };
+        addRenderableWidget(hopperRangeModeButton);
+    }
+
+    @Override
+    protected void containerTick()
+    {
+        super.containerTick();
+        if (filterModeButton.currentState != menu.menuStack.get(BDDataComponents.FILTER_MODE.get()))
+            filterModeButton.setState(menu.menuStack.get(BDDataComponents.FILTER_MODE.get()));
+
+        if (controlModeButton.currentState != menu.menuStack.get(BDDataComponents.CONTROL_MODE.get()))
+            controlModeButton.setState(menu.menuStack.get(BDDataComponents.CONTROL_MODE.get()));
+
+        if (hopperItemModeButton.currentState != menu.menuStack.get(BDDataComponents.HOPPER_ITEM_MODE.get()))
+            hopperItemModeButton.setState(menu.menuStack.get(BDDataComponents.HOPPER_ITEM_MODE.get()));
+
+        if (hopperXpModeButton.currentState != menu.menuStack.get(BDDataComponents.HOPPER_XP_MODE.get()))
+            hopperXpModeButton.setState(menu.menuStack.get(BDDataComponents.HOPPER_XP_MODE.get()));
+
+        if (hopperNBTModeButton.currentState != menu.menuStack.get(BDDataComponents.HOPPER_NBT_MODE.get()))
+            hopperNBTModeButton.setState(menu.menuStack.get(BDDataComponents.HOPPER_NBT_MODE.get()));
+
+        if (hopperFluidModeButton.currentState != menu.menuStack.get(BDDataComponents.HOPPER_FLUID_MODE.get()))
+            hopperFluidModeButton.setState(menu.menuStack.get(BDDataComponents.HOPPER_FLUID_MODE.get()));
+
+        if (hopperRangeModeButton.currentState != menu.menuStack.get(BDDataComponents.HOPPER_RANGE_MODE.get()))
+            hopperRangeModeButton.setState(menu.menuStack.get(BDDataComponents.HOPPER_RANGE_MODE.get()));
+
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event)
+    {
+        InputConstants.Key key = InputConstants.getKey(event);
+
+        if (Minecraft.getInstance().options.keyInventory.matches(key)
+                || BDKeyHelper.boundKey(BDShortKeys.OPEN_MAGNET_GUI_KEY).equals(key))
+        {
+            onClose();
+            return true;
+        }
+
+        return super.keyPressed(event);
+    }
+
+    @Override
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float a)
+    {
+        int[] drawY = new int[]{this.topPos}; // 用于动态控制绘制
+        CommonTexturesRender.renderTopBaseCommon(guiGraphics, this.leftPos, drawY);
+        CommonTexturesRender.renderFilterSlots(guiGraphics, this.leftPos, drawY);
+        CommonTexturesRender.renderFilterSlots(guiGraphics, this.leftPos, drawY);
+        CommonTexturesRender.renderFilterSlots(guiGraphics, this.leftPos, drawY);
+        CommonTexturesRender.renderFilterSlots(guiGraphics, this.leftPos, drawY);
+        CommonTexturesRender.renderCommonConnection(guiGraphics, this.leftPos, drawY);
+        CommonTexturesRender.renderPlayerInv(guiGraphics, this.leftPos, drawY);
+    }
+
+    @Override
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int xm, int ym)
+    {
+        guiGraphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, -12566464, false);
+        GuiRenderHelper.drawRightAnchoredText(guiGraphics, this.font, Component.translatable("menu.label.beyonddimensions.filter_slots"), imageWidth - 6, this.titleLabelY + 3, -12566464, false);
+        guiGraphics.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, -12566464, false);
+    }
+
+    protected int rebuildImageHeight()
+    {
+        return CommonTextures.TOP_BASE_COMMON_HEIGHT + CommonTextures.FILTER_SLOTS_HEIGHT * 4 + CommonTextures.COMMON_CONNECTION_HEIGHT + CommonTextures.PLAYER_INV_HEIGHT;
+    }
+
+    protected void rebuildLabelHeight()
+    {
+        this.titleLabelY = 8;
+        this.inventoryLabelY = CommonTextures.TOP_BASE_COMMON_HEIGHT + CommonTextures.FILTER_SLOTS_HEIGHT * 4 + 4;
+    }
+}

@@ -1,0 +1,42 @@
+package com.wintercogs.beyonddimensions.util;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import com.wintercogs.beyonddimensions.util.BDServerHooks;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * - 希望这个类能按期望运行......
+ */
+public final class RegistryAccessResolver
+{
+
+    private static final HolderLookup.Provider BUILTIN =
+            RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
+
+    /**
+     * 获取一个理论上适配当前环境的注册表信息
+     */
+    public static @NotNull HolderLookup.Provider resolve()
+    {
+        // 1) 若当前在服务端逻辑线程（专服或集成服）
+        var srv = BDServerHooks.getCurrentServer();
+        if (srv != null && srv.isSameThread()) return srv.registryAccess();
+
+        // 2) 客户端优先用 Connection（与网络来的 Holder 同 owner）
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+        {
+            var mc = Minecraft.getInstance();
+            var conn = mc.getConnection();
+            if (conn != null) return conn.registryAccess();
+            if (mc.level != null) return mc.level.registryAccess();
+        }
+
+        // 3) 主菜单/离线兜底
+        return BUILTIN;
+    }
+}

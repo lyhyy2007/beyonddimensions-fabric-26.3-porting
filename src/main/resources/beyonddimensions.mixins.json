@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.wintercogs.beyonddimensions.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [],
+  "client": [
+    "FluidStateModelSetMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

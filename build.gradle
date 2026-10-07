@@ -1,0 +1,83 @@
+plugins {
+    // 26.x 线用原生 loom（无 remap 后缀），依赖一律走 implementation（非 1.x 时代的 mod 依赖配置）。
+    id 'net.fabricmc.fabric-loom' version "1.17.21"
+    id 'maven-publish'
+}
+
+group = "com.wintercogs.beyonddimensions"
+// 上游 26.1 分支 mod_version = 0.7.13；移植线按「<上游版本>+26.3」命名。
+version = "0.7.13+26.3"
+
+base {
+    archivesName = "beyonddimensions"
+}
+
+repositories {
+    mavenCentral()
+    // TinyPinyin 只发布在 jcenter 系仓库；阿里云 public 是其可用镜像
+    maven {
+        name = "Aliyun Public"
+        url = "https://maven.aliyun.com/repository/public"
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:26.3"
+    // 26.1 起 Minecraft 不再混淆，Mojang 官方类名直接可用，因此没有映射声明
+    // （26.x 无 yarn，loom 26.1+ 对未混淆版本默认即官方名；官方 26.2 / 26.3 分支示例都不写映射行）。
+    // 依赖配置用 implementation（1.x 时代是 mod 依赖配置，26.x 用普通 implementation）。
+    implementation "net.fabricmc:fabric-loader:0.19.5"
+    implementation "net.fabricmc.fabric-api:fabric-api:0.161.0+26.3"
+
+    // 上游直接用 GLFW 键码常量构造按键映射；loom 26.x 不把 LWJGL 传进编译类路径，这里显式补上。
+    compileOnly "org.lwjgl:lwjgl-glfw:3.3.3"
+
+    // 拼音搜索：上游用 jarJar 内嵌 TinyPinyin；Fabric 侧用 loom 的 include（Jar-in-Jar）等价处理。
+    include implementation("com.github.promeg:tinypinyin:2.0.3") {
+        transitive = false
+    }
+}
+
+// 上游的 accesstransformer.cfg 已等价改写为 Fabric Access Widener。
+loom {
+    accessWidenerPath = file("src/main/resources/beyonddimensions.accesswidener")
+}
+
+// 目标 Java 版本用 toolchain 声明（不是 options.release + source/targetCompatibility）：
+// 环境 JDK 低于目标时（例如本机默认 Java 22、26.x 线目标 25），只有 toolchain 才会
+// 让 foojay 自动 provision 对应 JDK；否则 javac 会直接报「不支持发行版本 25」。
+java {
+    withSourcesJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+processResources {
+    filesMatching('fabric.mod.json') {
+        expand "version": version
+    }
+
+    // 署名与许可随产物分发
+    // 原作《超越维度 / Beyond Dimensions》作者为 Frostbite-time（MIT，Copyright (c) 2025 Frostbite-time）。
+    // MIT 要求版权与许可声明随副本一起传播，因此把声明文件打进 jar 的 META-INF/。
+    // 该做法与上游 build.gradle 一致（上游同样把 LICENSE / THIRD_PARTY_NOTICES.md / licenses 放入 META-INF）。
+    from(rootProject.file('LICENSE')) {
+        into 'META-INF'
+    }
+    from(rootProject.file('NOTICE')) {
+        into 'META-INF'
+    }
+    from(rootProject.file('THIRD_PARTY_NOTICES.md')) {
+        into 'META-INF'
+    }
+    from(rootProject.file('licenses')) {
+        into 'META-INF/licenses'
+    }
+}
+
+// 移植期诊断：默认 javac 只报 100 条错误，无法统计真实缺口，这里放开上限。
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xmaxerrs', '100000', '-Xlint:-deprecation,-unchecked']
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "B": "minecraft:stick",
+    "C": "beyonddimensions:space_time_bar"
+  },
+  "pattern": [
+    "  A",
+    " B ",
+    "C  "
+  ],
+  "result": {
+    "id": "beyonddimensions:xp_exchange_item"
+  }
+}

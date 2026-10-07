@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 600,
+  "experience": 1.0,
+  "ingredient": "beyonddimensions:shattered_space_time_crystallization",
+  "result": {
+    "id": "beyonddimensions:space_time_bar"
+  }
+}

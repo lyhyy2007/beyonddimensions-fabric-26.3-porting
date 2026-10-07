@@ -1,0 +1,38 @@
+# ---- Gradle ----
+build
+.gradle
+out
+
+# ---- 运行目录（loom runClient/runServer 生成）----
+run
+runs
+run-data
+
+# ---- IDE ----
+.idea
+*.iml
+*.ipr
+*.iws
+.vscode
+.settings
+.metadata
+.classpath
+.project
+bin
+*.launch
+eclipse
+
+# ---- loom 本地依赖仓 ----
+repo
+/src/generated/resources/.cache/
+
+# ---- 日志与临时产物 ----
+*.log
+logs
+*.zip
+!gradle/wrapper/gradle-wrapper.jar
+
+# ---- 系统 ----
+Thumbs.db
+desktop.ini
+.DS_Store

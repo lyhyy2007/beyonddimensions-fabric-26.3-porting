@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:diamond",
+    "B": "minecraft:gold_ingot",
+    "C": "beyonddimensions:space_time_stable_frame"
+  },
+  "pattern": [
+    " A ",
+    "BCB",
+    " B "
+  ],
+  "result": {
+    "id": "beyonddimensions:net_gifter"
+  }
+}
