@@ -26,6 +26,9 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+        
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Build
         run: ./gradlew build --no-daemon --stacktrace
@@ -46,23 +49,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 25
-        uses: actions/setup-java@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
-          distribution: temurin
-          java-version: "25"
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Build
-        run: ./gradlew build --no-daemon
+          name: beyonddimensions-fabric-26.3
+          path: artifacts
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/libs/*.jar
+          files: artifacts/*.jar
           generate_release_notes: true
